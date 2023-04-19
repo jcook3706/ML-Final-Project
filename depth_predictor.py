@@ -8,11 +8,11 @@ import time
 class MyNet(nn.Module):
     def __init__(self):
         super(MyNet, self).__init__()
-        self.conv1 = nn.Conv2d(3, 8, kernel_size=3, stride=1, padding=1)
-        self.conv2 = nn.Conv2d(8, 16, kernel_size=3, stride=1, padding=1)
-        self.conv3 = nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1)
-        self.conv4 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
-        self.conv5 = nn.Conv2d(64, 1, kernel_size=3, stride=1, padding=1)
+        self.conv1 = nn.Conv2d(3, 128, kernel_size=3, stride=1, padding=1)
+        self.conv2 = nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1)
+        self.conv3 = nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1)
+        self.conv4 = nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1)
+        self.conv5 = nn.Conv2d(128, 1, kernel_size=3, stride=1, padding=1)
 
     def forward(self, x):
         x = torch.relu(self.conv1(x))
@@ -135,7 +135,7 @@ for epoch in range(numEpochs):
                   (epoch + 1, i + 1, running_loss / 100))
             running_loss = 0.0
     scheduler.step()
-    if epoch == numEpochs:
+    if epoch == numEpochs-1:
         res = model(torch.from_numpy(c.transpose((0, 3, 1, 2))).float())
         a = np.squeeze(res.detach().numpy())
         a = a*255.0

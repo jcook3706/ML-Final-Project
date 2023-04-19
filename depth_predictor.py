@@ -124,6 +124,7 @@ for epoch in range(100):
     for i, data in enumerate(loader, 0):
         inputs, targets = data
         if device == "cuda":
+            print('Running on cuda')
             inputs = inputs.cuda()
             targets = targets.cuda()
         print(inputs.device)

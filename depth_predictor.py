@@ -89,7 +89,7 @@ def showImage(num):
     dImg.show()
 
 batchSize = 4
-datasetSize = 400
+datasetSize = 4000
 numEpochs = 100
 
 device = torch.device('cuda' if torch.cuda.is_available() else "cpu")

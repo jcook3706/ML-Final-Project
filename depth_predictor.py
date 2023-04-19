@@ -135,7 +135,7 @@ for epoch in range(numEpochs):
     print('Loss: ', running_loss/datasetSize)
     scheduler.step()
     if epoch == numEpochs-1:
-        res = model(torch.from_numpy(colorDataset[9:10].transpose((0, 3, 1, 2))).float())
+        res = model(torch.from_numpy(colorDataset[9:10].transpose((0, 3, 1, 2))).float().cuda())
         a = np.squeeze(res.detach().numpy())
         a = a*255.0
         img = Image.fromarray(np.uint8(a))

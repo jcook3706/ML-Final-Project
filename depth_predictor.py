@@ -13,6 +13,7 @@ class MyNet(nn.Module):
         self.conv3 = nn.Conv2d(32, 32, kernel_size=3, stride=1, padding=1)
         self.conv4 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
         self.conv5 = nn.Conv2d(64, 1, kernel_size=3, stride=1, padding=1)
+        self.lin1 = nn.Linear(250*250, 250*250)
 
     def forward(self, x):
         x = torch.relu(self.conv1(x))
@@ -89,8 +90,8 @@ def showImage(num):
     dImg.show()
 
 batchSize = 10
-datasetSize = 4000
-numEpochs = 100
+datasetSize = 400
+numEpochs = 10
 
 device = torch.device('cuda' if torch.cuda.is_available() else "cpu")
 print('Using device: ', device)

@@ -116,7 +116,7 @@ inputTensor = torch.from_numpy(colorDataset.transpose((0, 3, 1, 2))).float()
 targetTensor = torch.from_numpy(depthDataset.transpose((0, 3, 1, 2))).float()
 dataset = torch.utils.data.TensorDataset(inputTensor, targetTensor)
 loader = torch.utils.data.DataLoader(dataset, batch_size=batchSize, shuffle=True)
-showImage(10)
+showImage(9)
 
 for epoch in range(numEpochs):
     print('Epoch: ', epoch)

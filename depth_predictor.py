@@ -131,10 +131,7 @@ for epoch in range(numEpochs):
         loss.backward()
         optimizer.step()
         running_loss += loss.item()
-        if i % 100 == 99:
-            print('[%d, %5d] loss: %.3f' %
-                  (epoch + 1, i + 1, running_loss / 100))
-            running_loss = 0.0
+    print('Loss: ', running_loss/datasetSize)
     scheduler.step()
     if epoch == numEpochs-1:
         res = model(torch.from_numpy(c.transpose((0, 3, 1, 2))).float())

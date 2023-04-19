@@ -22,7 +22,6 @@ class MyNet(nn.Module):
         x = torch.relu(self.conv2(x))
         x = torch.relu(self.conv3(x))
         x = torch.relu(self.conv4(x))
-        torch.fla
         x = torch.sigmoid(self.conv5(x))
         return x
 

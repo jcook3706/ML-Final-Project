@@ -78,8 +78,19 @@ def convertDepthImages(numImages=4000, numDivisions=40):
             depthDataset = depthImages
     return depthDataset
 
+def showImage(num):
+    cImg = convertTGA(num, True)
+    dImg = convertTGA(num, False)
+    cImg = np.squeeze(cImg)*255.0
+    dImg = np.squeeze(dImg)*255.0
+    cImg = Image.fromarray(np.uint8(cImg))
+    dImg = Image.fromarray(np.uint8(dImg))
+    cImg.show()
+    dImg.show()
+
 batchSize = 4
 datasetSize = 400
+numEpochs = 100
 
 device = torch.device('cuda' if torch.cuda.is_available() else "cpu")
 print('Using device: ', device)
@@ -103,22 +114,9 @@ inputTensor = torch.from_numpy(colorDataset.transpose((0, 3, 1, 2))).float()
 targetTensor = torch.from_numpy(depthDataset.transpose((0, 3, 1, 2))).float()
 dataset = torch.utils.data.TensorDataset(inputTensor, targetTensor)
 loader = torch.utils.data.DataLoader(dataset, batch_size=batchSize, shuffle=True)
-# c = convertTGA(5, True)
-# d = convertTGA(5, False)
-# a = np.squeeze(c)
-# a = a*255.0
-# img = Image.fromarray(np.uint8(a))
-# img.show()
-# a = np.squeeze(d)
-# a = a*255.0
-# img = Image.fromarray(np.uint8(a))
-# img.show()
-for epoch in range(100):
-    # res = model(torch.from_numpy(c.transpose((0, 3, 1, 2))).float())
-    # a = np.squeeze(res.detach().numpy())
-    # a = a*255.0
-    # img = Image.fromarray(np.uint8(a))
-    # img.show()
+showImage(10)
+
+for epoch in range(numEpochs):
     print('Epoch: ', epoch)
     running_loss = 0.0
     for i, data in enumerate(loader, 0):
@@ -137,3 +135,9 @@ for epoch in range(100):
                   (epoch + 1, i + 1, running_loss / 100))
             running_loss = 0.0
     scheduler.step()
+    if epoch == numEpochs:
+        res = model(torch.from_numpy(c.transpose((0, 3, 1, 2))).float())
+        a = np.squeeze(res.detach().numpy())
+        a = a*255.0
+        img = Image.fromarray(np.uint8(a))
+        img.show()

@@ -12,8 +12,8 @@ class MyNet(nn.Module):
         self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1)
         self.conv3 = nn.Conv2d(32, 32, kernel_size=3, stride=1, padding=1)
         self.conv4 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
-        self.conv5 = nn.Conv2d(64, 1, kernel_size=3, stride=1, padding=1)
-        self.lin1 = nn.Linear(250*250, 250*250)
+        self.conv5 = nn.Conv2d(32, 1, kernel_size=3, stride=1, padding=1)
+        # self.lin1 = nn.Linear(250*250, 250*250)
         self.pool = nn.MaxPool2d(2, 2)
         self.dropout = nn.Dropout(p=0.5)
 
@@ -21,7 +21,6 @@ class MyNet(nn.Module):
         x = torch.relu(self.conv1(x))
         x = torch.relu(self.conv2(x))
         x = torch.relu(self.conv3(x))
-        x = torch.relu(self.conv4(x))
         x = torch.sigmoid(self.conv5(x))
         return x
 

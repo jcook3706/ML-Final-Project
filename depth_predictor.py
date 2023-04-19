@@ -8,16 +8,17 @@ import time
 class MyNet(nn.Module):
     def __init__(self):
         super(MyNet, self).__init__()
-        self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1)
-        self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1)
-        self.conv3 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
-        self.conv4 = nn.Conv2d(64, 1, kernel_size=3, stride=1, padding=1)
+        self.conv1 = nn.Conv2d(3, 8, kernel_size=3, stride=1, padding=1)
+        self.conv2 = nn.Conv2d(8, 16, kernel_size=3, stride=1, padding=1)
+        self.conv3 = nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1)
+        self.conv4 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
+        self.conv5 = nn.Conv2d(64, 1, kernel_size=3, stride=1, padding=1)
 
     def forward(self, x):
-        x = nn.functional.relu(self.conv1(x))
-        x = nn.functional.relu(self.conv2(x))
-        x = nn.functional.relu(self.conv3(x))
-        x = nn.functional.sigmoid(self.conv4(x))
+        x = torch.relu(self.conv1(x))
+        x = torch.relu(self.conv2(x))
+        x = torch.relu(self.conv3(x))
+        x = torch.sigmoid(self.conv4(x))
         return x
 
 def convertTGA(num, color):
@@ -79,6 +80,8 @@ def convertDepthImages(numImages=4000, numDivisions=40):
 batchSize = 4
 datasetSize = 400
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 print('Converting color dataset...')
 colorDataset = convertColorImages(datasetSize, 10)
 print('Color dataset shape: ', colorDataset.shape)
@@ -89,22 +92,26 @@ print('Depth dataset shape: ', depthDataset.shape)
 
 # create an instance of the network and pass some data through it
 model = MyNet()
+model.to(device)
 criterion = nn.MSELoss()
-optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+optimizer = optim.SGD(model.parameters(), lr=0.1, momentum=0.9)
+scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.9)
 inputTensor = torch.from_numpy(colorDataset.transpose((0, 3, 1, 2))).float()
 targetTensor = torch.from_numpy(depthDataset.transpose((0, 3, 1, 2))).float()
 dataset = torch.utils.data.TensorDataset(inputTensor, targetTensor)
 loader = torch.utils.data.DataLoader(dataset, batch_size=batchSize, shuffle=True)
-a = np.squeeze(colorDataset[1])
+c = convertTGA(5, True)
+d = convertTGA(5, False)
+a = np.squeeze(c)
 a = a*255.0
 img = Image.fromarray(np.uint8(a))
 img.show()
-a = np.squeeze(depthDataset[1])
+a = np.squeeze(d)
 a = a*255.0
 img = Image.fromarray(np.uint8(a))
 img.show()
-for epoch in range(10):
-    res = model(torch.from_numpy(colorDataset[1:2].transpose((0, 3, 1, 2))).float())
+for epoch in range(100):
+    res = model(torch.from_numpy(c.transpose((0, 3, 1, 2))).float())
     a = np.squeeze(res.detach().numpy())
     a = a*255.0
     img = Image.fromarray(np.uint8(a))
@@ -123,3 +130,4 @@ for epoch in range(10):
             print('[%d, %5d] loss: %.3f' %
                   (epoch + 1, i + 1, running_loss / 100))
             running_loss = 0.0
+    scheduler.step()

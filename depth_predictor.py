@@ -121,6 +121,9 @@ for epoch in range(100):
     running_loss = 0.0
     for i, data in enumerate(loader, 0):
         inputs, targets = data
+        if device == "CUDA":
+            inputs = inputs.cuda()
+            targets = targets.cuda()
         optimizer.zero_grad()
         outputs = model(inputs)
         loss = criterion(outputs, targets)

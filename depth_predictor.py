@@ -18,7 +18,8 @@ class MyNet(nn.Module):
         x = torch.relu(self.conv1(x))
         x = torch.relu(self.conv2(x))
         x = torch.relu(self.conv3(x))
-        x = torch.sigmoid(self.conv4(x))
+        x = torch.relu(self.conv4(x))
+        x = torch.sigmoid(self.conv5(x))
         return x
 
 def convertTGA(num, color):
@@ -100,22 +101,22 @@ inputTensor = torch.from_numpy(colorDataset.transpose((0, 3, 1, 2))).float()
 targetTensor = torch.from_numpy(depthDataset.transpose((0, 3, 1, 2))).float()
 dataset = torch.utils.data.TensorDataset(inputTensor, targetTensor)
 loader = torch.utils.data.DataLoader(dataset, batch_size=batchSize, shuffle=True)
-c = convertTGA(5, True)
-d = convertTGA(5, False)
-a = np.squeeze(c)
-a = a*255.0
-img = Image.fromarray(np.uint8(a))
-img.show()
-a = np.squeeze(d)
-a = a*255.0
-img = Image.fromarray(np.uint8(a))
-img.show()
+# c = convertTGA(5, True)
+# d = convertTGA(5, False)
+# a = np.squeeze(c)
+# a = a*255.0
+# img = Image.fromarray(np.uint8(a))
+# img.show()
+# a = np.squeeze(d)
+# a = a*255.0
+# img = Image.fromarray(np.uint8(a))
+# img.show()
 for epoch in range(100):
-    res = model(torch.from_numpy(c.transpose((0, 3, 1, 2))).float())
-    a = np.squeeze(res.detach().numpy())
-    a = a*255.0
-    img = Image.fromarray(np.uint8(a))
-    img.show()
+    # res = model(torch.from_numpy(c.transpose((0, 3, 1, 2))).float())
+    # a = np.squeeze(res.detach().numpy())
+    # a = a*255.0
+    # img = Image.fromarray(np.uint8(a))
+    # img.show()
     print('Epoch: ', epoch)
     running_loss = 0.0
     for i, data in enumerate(loader, 0):

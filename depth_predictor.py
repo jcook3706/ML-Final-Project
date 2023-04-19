@@ -136,7 +136,7 @@ for epoch in range(numEpochs):
     scheduler.step()
     if epoch == numEpochs-1:
         res = model(torch.from_numpy(colorDataset[9:10].transpose((0, 3, 1, 2))).float().cuda())
-        a = np.squeeze(res.detach().numpy())
+        a = np.squeeze(res.cpu().detach().numpy())
         a = a*255.0
         img = Image.fromarray(np.uint8(a))
         img.show()

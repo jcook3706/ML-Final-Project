@@ -8,11 +8,11 @@ import time
 class MyNet(nn.Module):
     def __init__(self):
         super(MyNet, self).__init__()
-        self.conv1 = nn.Conv2d(3, 128, kernel_size=3, stride=1, padding=1)
-        self.conv2 = nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1)
-        self.conv3 = nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1)
-        self.conv4 = nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1)
-        self.conv5 = nn.Conv2d(128, 1, kernel_size=3, stride=1, padding=1)
+        self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1)
+        self.conv2 = nn.Conv2d(32, 32, kernel_size=3, stride=1, padding=1)
+        self.conv3 = nn.Conv2d(32, 32, kernel_size=3, stride=1, padding=1)
+        self.conv4 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
+        self.conv5 = nn.Conv2d(64, 1, kernel_size=3, stride=1, padding=1)
 
     def forward(self, x):
         x = torch.relu(self.conv1(x))
@@ -88,7 +88,7 @@ def showImage(num):
     cImg.show()
     dImg.show()
 
-batchSize = 4
+batchSize = 10
 datasetSize = 4000
 numEpochs = 100
 

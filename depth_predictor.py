@@ -9,7 +9,7 @@ class MyNet(nn.Module):
     def __init__(self):
         super(MyNet, self).__init__()
         self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1)
-        self.conv2 = nn.Conv2d(32, 32, kernel_size=3, stride=1, padding=1)
+        self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1)
         self.conv3 = nn.Conv2d(32, 32, kernel_size=3, stride=1, padding=1)
         self.conv4 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
         self.conv5 = nn.Conv2d(64, 1, kernel_size=3, stride=1, padding=1)
@@ -44,13 +44,13 @@ def convertTGA(num, color):
         rgb_array = np.reshape(rgb_array, (1, 250, 250, 1))
     return rgb_array
 
-def convertColorImages(numImages=4000, numDivisions=40):
+def convertColorImages(numImages=4000, numDivisions=100):
     colorDataset = None
     for i in range(numDivisions):
         print(i)
         colorImages = None
         for k in range(int(numImages/numDivisions)):
-            imgData = convertTGA(i*numDivisions+k, True)
+            imgData = convertTGA(int(i*(numImages/numDivisions)+k), True)
             if colorImages is not None:
                 colorImages = np.concatenate((colorImages, imgData), axis=0)
             else:
@@ -61,13 +61,13 @@ def convertColorImages(numImages=4000, numDivisions=40):
             colorDataset = colorImages
     return colorDataset
 
-def convertDepthImages(numImages=4000, numDivisions=40):
+def convertDepthImages(numImages=4000, numDivisions=100):
     depthDataset = None
     for i in range(numDivisions):
         print(i)
         depthImages = None
         for k in range(int(numImages/numDivisions)):
-            imgData = convertTGA(i*numDivisions+k, False)
+            imgData = convertTGA(int(i*(numImages/numDivisions)+k), False)
             if depthImages is not None:
                 depthImages = np.concatenate((depthImages, imgData), axis=0)
             else:
@@ -96,11 +96,11 @@ device = torch.device('cuda' if torch.cuda.is_available() else "cpu")
 print('Using device: ', device)
 
 print('Converting color dataset...')
-colorDataset = convertColorImages(datasetSize, 10)
+colorDataset = convertColorImages(datasetSize, 100)
 print('Color dataset shape: ', colorDataset.shape)
 
 print('Converting depth dataset...')
-depthDataset = convertDepthImages(datasetSize, 10)
+depthDataset = convertDepthImages(datasetSize, 100)
 print('Depth dataset shape: ', depthDataset.shape)
 
 # create an instance of the network and pass some data through it

@@ -92,7 +92,7 @@ def showImage(num):
 
 batchSize = 4
 datasetSize = 400
-numEpochs = 10
+numEpochs = 100
 
 device = torch.device('cuda' if torch.cuda.is_available() else "cpu")
 print('Using device: ', device)
@@ -112,8 +112,8 @@ if torch.cuda.is_available():
 criterion = nn.MSELoss()
 optimizer = optim.SGD(model.parameters(), lr=0.1, momentum=0.9)
 scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.9)
-inputTensor = torch.from_numpy(colorDataset.transpose((0, 3, 1, 2))).float()/255.0
-targetTensor = torch.from_numpy(depthDataset.transpose((0, 3, 1, 2))).float()/255.0
+inputTensor = torch.from_numpy(colorDataset.transpose((0, 3, 1, 2))).float()
+targetTensor = torch.from_numpy(depthDataset.transpose((0, 3, 1, 2))).float()
 dataset = torch.utils.data.TensorDataset(inputTensor, targetTensor)
 loader = torch.utils.data.DataLoader(dataset, batch_size=batchSize, shuffle=True)
 showImage(10)

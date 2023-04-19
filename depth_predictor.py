@@ -81,7 +81,7 @@ def convertDepthImages(numImages=4000, numDivisions=40):
 batchSize = 4
 datasetSize = 400
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print('Using device: ', device)
 
 print('Converting color dataset...')
@@ -94,8 +94,8 @@ print('Depth dataset shape: ', depthDataset.shape)
 
 # create an instance of the network and pass some data through it
 model = MyNet()
-if device == 'cuda:0':
-    model.to(device)
+if device == 'cuda':
+    model.to(torch.device('cuda'))
 criterion = nn.MSELoss()
 optimizer = optim.SGD(model.parameters(), lr=0.1, momentum=0.9)
 scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.9)
@@ -123,9 +123,11 @@ for epoch in range(100):
     running_loss = 0.0
     for i, data in enumerate(loader, 0):
         inputs, targets = data
-        if device == "cuda:0":
-            inputs = inputs.cuda()
-            targets = targets.cuda()
+        if device == "cuda":
+            inputs = inputs.to(torch.device('cuda'))
+            targets = targets.to(torch.device('cuda'))
+        print(inputs.device)
+        print(targets.device)
         optimizer.zero_grad()
         outputs = model(inputs)
         loss = criterion(outputs, targets)

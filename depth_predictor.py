@@ -126,8 +126,6 @@ for epoch in range(100):
         if torch.cuda.is_available():
             inputs = inputs.cuda()
             targets = targets.cuda()
-        print(inputs.device)
-        print(targets.device)
         optimizer.zero_grad()
         outputs = model(inputs)
         loss = criterion(outputs, targets)

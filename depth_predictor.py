@@ -93,7 +93,8 @@ print('Depth dataset shape: ', depthDataset.shape)
 
 # create an instance of the network and pass some data through it
 model = MyNet()
-model.to(device)
+if device == 'cuda':
+    model.cuda()
 criterion = nn.MSELoss()
 optimizer = optim.SGD(model.parameters(), lr=0.1, momentum=0.9)
 scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.9)
@@ -121,7 +122,7 @@ for epoch in range(100):
     running_loss = 0.0
     for i, data in enumerate(loader, 0):
         inputs, targets = data
-        if device == "CUDA":
+        if device == "cuda":
             inputs = inputs.cuda()
             targets = targets.cuda()
         optimizer.zero_grad()

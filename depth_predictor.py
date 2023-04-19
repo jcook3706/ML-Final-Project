@@ -14,12 +14,15 @@ class MyNet(nn.Module):
         self.conv4 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
         self.conv5 = nn.Conv2d(64, 1, kernel_size=3, stride=1, padding=1)
         self.lin1 = nn.Linear(250*250, 250*250)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.dropout = nn.Dropout(p=0.5)
 
     def forward(self, x):
         x = torch.relu(self.conv1(x))
         x = torch.relu(self.conv2(x))
         x = torch.relu(self.conv3(x))
         x = torch.relu(self.conv4(x))
+        torch.fla
         x = torch.sigmoid(self.conv5(x))
         return x
 
@@ -89,7 +92,7 @@ def showImage(num):
     cImg.show()
     dImg.show()
 
-batchSize = 10
+batchSize = 4
 datasetSize = 400
 numEpochs = 10
 
@@ -111,8 +114,8 @@ if torch.cuda.is_available():
 criterion = nn.MSELoss()
 optimizer = optim.SGD(model.parameters(), lr=0.1, momentum=0.9)
 scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.9)
-inputTensor = torch.from_numpy(colorDataset.transpose((0, 3, 1, 2))).float()
-targetTensor = torch.from_numpy(depthDataset.transpose((0, 3, 1, 2))).float()
+inputTensor = torch.from_numpy(colorDataset.transpose((0, 3, 1, 2))).float()/255.0
+targetTensor = torch.from_numpy(depthDataset.transpose((0, 3, 1, 2))).float()/255.0
 dataset = torch.utils.data.TensorDataset(inputTensor, targetTensor)
 loader = torch.utils.data.DataLoader(dataset, batch_size=batchSize, shuffle=True)
 showImage(10)
